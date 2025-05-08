@@ -34,7 +34,7 @@ function xorshift32(x: number) {
     }
 }
 
-export async function createRng(seed: string) {
+export async function createRng(seed: string): Promise<Rng> {
     const data = new TextEncoder().encode(seed);
     const hash = await crypto.subtle
         .digest("SHA-256", data)
