@@ -40,12 +40,16 @@ export async function createRng(seed: string): Promise<Rng> {
         .digest("SHA-256", data)
         .then(buf => new Uint32Array(buf));
     const initialState = (hash[0] ?? 0) | (hash[1] ?? 0) << 8 | (hash[2] ?? 0) << 16 | (hash[3] ?? 0) << 24
-    const next = xorshift32(initialState)
+    return createRngFromState(initialState)
+}
+
+export function createRngFromState(state: number): Rng {
+    const next = xorshift32(state)
     const random = () => next() / 0xffffffff
     return {
         next,
         random,
         shuffle: <T>(a: T[]) => fisherYatesShuffle(a, random),
         range: (min: number, max: number) => min + random() * (max - min)
-    } satisfies Rng
+    }
 }
