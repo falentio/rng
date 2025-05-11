@@ -15,6 +15,10 @@ export type Rng = {
      * shuffle an array
      */
     shuffle: <T>(array: T[]) => T[]
+    /**
+     * pick a random element from an array
+     */
+    pick: <T>(array: T[]) => T
 }
 
 function fisherYatesShuffle<T>(array: T[], random: Rng["random"] = Math.random) {
@@ -50,6 +54,7 @@ export function createRngFromState(state: number): Rng {
         next,
         random,
         shuffle: <T>(a: T[]) => fisherYatesShuffle(a, random),
-        range: (min: number, max: number) => min + random() * (max - min)
+        range: (min: number, max: number) => min + random() * (max - min),
+        pick: <T>(a: T[]) => a[random() * a.length | 0]
     }
 }
